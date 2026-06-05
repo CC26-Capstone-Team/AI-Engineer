@@ -1,0 +1,31 @@
+{
+  "model_name": "MLP_ResNet",
+  "num_features": 97,
+  "num_classes": 20,
+  "class_names": [
+    "Backend Developer",
+    "Business Analyst",
+    "Cloud Architect",
+    "Cybersecurity Analyst",
+    "Data Analyst",
+    "Data Engineer",
+    "Data Scientist",
+    "DevOps Engineer",
+    "Financial Analyst",
+    "Frontend Developer",
+    "HR Manager",
+    "Machine Learning Engineer",
+    "Marketing Manager",
+    "Operations Manager",
+    "Product Manager",
+    "Quantitative Analyst",
+    "Research Scientist",
+    "Senior Software Engineer",
+    "Software Engineer",
+    "UX Designer"
+  ],
+  "trained_with": "tf.GradientTape",
+  "best_val_acc": 0.9782000184059143,
+  "test_accuracy": 0.9774,
+  "saved_at": "2026-05-28T12:43:38.025471"
+}
