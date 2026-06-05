@@ -1,192 +1,277 @@
-# 🤖 AI Engineer - Job Title Prediction Model & API
+# 🤖 Job Title Prediction API
 
+Layanan AI berbasis Deep Learning untuk memprediksi Job Title kandidat berdasarkan latar belakang pendidikan, keahlian, dan nilai GPA.
 
+Model dikembangkan menggunakan TensorFlow Functional API dan dideploy sebagai REST API menggunakan FastAPI pada Google Cloud Run.
 
-Selamat datang di repositori layanan kecerdasan buatan (*AI Service*) untuk **Job Title Prediction**. Repositori ini berisi pipa pemodelan mendalam (*Deep Learning*) menggunakan **TensorFlow Functional API** hingga proses *deployment* siap pakai sebagai REST API menggunakan **FastAPI** di lingkungan **Google Cloud Run**.
+## 🌐 Live Demo
 
+| Service | URL |
+|----------|-----|
+| API Base URL | https://your-service-name.a.run.app |
+| Swagger Docs | https://your-service-name.a.run.app/docs |
+| ReDoc | https://your-service-name.a.run.app/redoc |
+| Health Check | https://your-service-name.a.run.app/health |
 
+---
 
-Sistem ini dirancang untuk menerima input profil kandidat mentah yang mudah dipahami manusia (*Human-readable input*), melakukan transformasi data secara *real-time* di memori melalui berkas preprocessor (`.pkl`), dan memprediksi **20 kelas Job Title** terbaik lengkap dengan nilai probabilitasnya (*confidence score*).
+## ✨ Features
 
+* Predict **20 Job Title Classes**
+* Return prediction confidence score
+* Support **Top-K Prediction**
+* Real-time preprocessing using serialized encoders (`.pkl`)
+* REST API with interactive Swagger documentation
+* Ready for containerized deployment using Docker & Cloud Run
 
+---
 
----### 📂 Struktur Direktori Proyek
+## 📂 Project Structure
 
-Proyek ini diorganisasikan secara modular untuk memisahkan antara proses riset, penyimpanan artefak biner, dan kode produksi aplikasi:```text
-
+```text
 job-title-prediction/
-
 ├── app/
-
-│   └── main.py                 # Kode utama FastAPI (Inference Service)
-
+│   └── main.py
+│
 ├── encoder/
-
-│   ├── encoder_education_required.pkl # Label encoder tingkat pendidikan
-
-│   ├── mlb_edu_bg.pkl          # Multi-label binarizer rumpun studi
-
-│   ├── mlb_skills.pkl          # Multi-label binarizer keahlian kandidat
-
-│   └── scaler_gpa.pkl          # Scaler normalisasi nilai GPA (IPK)
-
+│   ├── encoder_education_required.pkl
+│   ├── mlb_edu_bg.pkl
+│   ├── mlb_skills.pkl
+│   └── scaler_gpa.pkl
+│
 ├── model/
+│   ├── mlp_job_title.keras
+│   └── model_metadata.json
+│
+├── carpathmu_mlp_modelling.ipynb
+├── Dockerfile
+├── requirements.txt
+└── .gitignore
+```
 
-│   ├── mlp_job_title.keras     # Bobot & Graf Model Utama (Dieksklusi dari Git)
+### Directory Description
 
-│   └── model_metadata.json     # Konfigurasi target kelas & info akurasi
+| Directory                       | Description                                                    |
+| ------------------------------- | -------------------------------------------------------------- |
+| `app/`                          | FastAPI application source code                                |
+| `encoder/`                      | Preprocessing artifacts (Encoder, Scaler, MultiLabelBinarizer) |
+| `model/`                        | Trained model and metadata                                     |
+| `carpathmu_mlp_modelling.ipynb` | Model training & experimentation notebook                      |
+| `Dockerfile`                    | Container build configuration                                  |
+| `requirements.txt`              | Python dependencies                                            |
 
-├── carpathmu_mlp_modelling.ipynb # Jupyter Notebook training & eksperimen
+---
 
-├── Dockerfile                  # Cetak biru Docker untuk standardisasi deployment
+# 🧠 Model Architecture
 
-├── requirements.txt            # Daftar dependensi library python proyek
+The prediction model uses a **Multi-Layer Perceptron (MLP)** with **Residual Connections (Skip Connections)** to improve training stability and reduce vanishing gradient problems.
 
-└── .gitignore                  # Berkas pengecualian pelacakan Git (.keras diabaikan)
+### Main Components
 
-🧠 Tentang Model (Deep Learning Architecture)
+#### ResidualBlock
 
-Seluruh proses riset, eksplorasi, dan pelatihan model didokumentasikan pada berkas carpathmu_mlp_modelling.ipynb. Spesifikasi utama model ini adalah:
+Custom TensorFlow layer consisting of:
 
-Arsitektur Jaringan: Menggunakan Multi-Layer Perceptron (MLP) tingkat dalam yang memanfaatkan struktur Residual Connection (Skip Connection) untuk memitigasi risiko vanishing gradient pada jaringan dalam.
+* Dense Layer
+* Batch Normalization
+* ReLU Activation
+* Dropout (0.3)
+* Skip Connection Projection
 
-Komponen Kustom (Custom Components):
+#### LabelSmoothingCategoricalCrossentropy
 
-ResidualBlock: Blok kustom berbasis objek layers.Layer yang menggabungkan lapisan Dense, Batch Normalization, Activation (ReLU), dan Dropout (rate: 0.3) dengan proyeksi linear jalan pintas (skip layer).
+Custom loss function with:
 
-LabelSmoothingCategoricalCrossentropy: Fungsi kerugian kustom berbasis objek losses.Loss dengan teknik label smoothing sebesar 0.1 guna mencegah model menjadi terlalu percaya diri (overconfident) akibat distribusi kelas yang tidak seimbang.
+```text
+Label Smoothing = 0.1
+```
 
-Fitur Input: Model mengekspektasikan total 104 fitur hasil penggabungan matriks biner dan numerik secara horizontal (axis=1) sesaat sebelum proses inference.
+Used to reduce model overconfidence and improve generalization on imbalanced classes.
 
-⚡ Dokumentasi & Integrasi FastAPI (Cloud Run Deployment)
+### Input Features
 
-Layanan ini dikemas menggunakan FastAPI demi performa tinggi dan latensi rendah saat melayani permintaan prediksi dari aplikasi Front-End atau Mobile.
+The model expects:
 
-🌐 URL Live Production & Dokumentasi
+```text
+104 Features
+```
 
-Production API Base URL: https://<nama-service-kamu>-<hash-cloud-run>.a.run.app
+Generated from a combination of:
 
-Live Interactive Swagger UI: https://<nama-service-kamu>-<hash-cloud-run>.a.run.app/docs
+* Education Level Encoding
+* Education Background Encoding
+* Skills Encoding
+* GPA Normalization
 
-Live Alternative ReDoc: https://<nama-service-kamu>-<hash-cloud-run>.a.run.app/redoc
+---
 
-Service Health Check: https://<nama-service-kamu>-<hash-cloud-run>.a.run.app/health
+# 🚀 API Documentation
 
-💡 Silakan sesuaikan tautan di atas dengan URL resmi yang didapatkan dari Google Cloud Run Console setelah proses deploy selesai.
+## Base URLs
 
-1. Cara Menjalankan API Secara Lokal (Tahap Pengembangan)
+Replace the following URL with your Cloud Run endpoint after deployment.
 
-Jika ingin menguji API atau melakukan perubahan kode secara lokal di komputer Anda:
+```text
+https://<service-name>-<hash>.a.run.app
+```
 
-Bash
+### Available Endpoints
 
+| Endpoint   | Method | Description                 |
+| ---------- | ------ | --------------------------- |
+| `/health`  | GET    | Service health check        |
+| `/predict` | POST   | Predict candidate job title |
+| `/docs`    | GET    | Swagger UI                  |
+| `/redoc`   | GET    | ReDoc documentation         |
 
+---
 
-# Buka terminal di direktori root proyek (job-title-prediction)# 1. Install seluruh dependensi library Python
+# 💻 Running Locally
 
-pip install -r requirements.txt# 2. Jalankan server lokal Uvicorn dengan auto-reload
+## 1. Install Dependencies
 
+```bash
+pip install -r requirements.txt
+```
+
+## 2. Start Development Server
+
+```bash
 uvicorn app.main:app --reload
+```
 
-Akses Swagger UI lokal tersedia melalui alamat: http://127.0.0.1:8000/docs
+Server will be available at:
 
-2. Spesifikasi Endpoint Prediksi
+```text
+http://127.0.0.1:8000
+```
 
-POST /predict
+Swagger UI:
 
-Menerima profil mentah kandidat, memprosesnya lewat pipa enkoder, dan mengembalikan hasil prediksi Top-K.
+```text
+http://127.0.0.1:8000/docs
+```
 
-Request Body (JSON):
+---
 
-JSON
+# 🔮 Prediction Endpoint
 
+## Request
 
+### POST `/predict`
 
+```json
 {
-
   "education_required": "Bachelor's Degree",
-
-  "edu_bg": ["Computer Science", "Information Technology"],
-
-  "skills": ["Python", "TensorFlow", "FastAPI", "SQL"],
-
+  "edu_bg": [
+    "Computer Science",
+    "Information Technology"
+  ],
+  "skills": [
+    "Python",
+    "TensorFlow",
+    "FastAPI",
+    "SQL"
+  ],
   "gpa": 3.85,
-
   "top_k": 3
-
 }
+```
 
-Response Success (JSON - Status 200):
+---
 
-JSON
+## Response
 
-
-
+```json
 {
-
   "predicted": "Machine Learning Engineer",
-
   "confidence": 0.8942,
-
   "top_k": [
-
     {
-
       "rank": 1,
-
       "job_title": "Machine Learning Engineer",
-
       "probability": 0.8942
-
     },
-
     {
-
       "rank": 2,
-
       "job_title": "Data Scientist",
-
       "probability": 0.0815
-
     },
-
     {
-
       "rank": 3,
-
       "job_title": "Software Engineer",
-
       "probability": 0.0243
-
     }
-
   ]
-
 }
+```
 
-🐳 Panduan Kontainerisasi & Deployment (Google Cloud Run)
+---
 
-Proyek ini menggunakan Dockerfile berbasis python:3.12-slim untuk menjamin ukuran image yang ringan namun tetap stabil. Port internal container diatur pada port 8080 sesuai dengan standar mutlak infrastruktur Google Cloud.
+# 🐳 Docker Deployment
 
-Langkah cepat untuk membangun dan merilis aplikasi via Google Cloud CLI (gcloud):
+## Build Container
 
-Bash
+```bash
+docker build -t job-title-api .
+```
 
+## Run Locally
 
+```bash
+docker run -p 8080:8080 job-title-api
+```
 
-# 1. Tentukan Project ID target di Google Cloud
+---
 
-gcloud config set project <PROJECT_ID_KAMU># 2. Build image dan simpan ke Google Artifact Registry / Container Registry
+# ☁️ Deploy to Google Cloud Run
 
-gcloud builds submit --tag gcr.io/<PROJECT_ID_KAMU>/job-title-api# 3. Deploy langsung image ke Google Cloud Run
+## Set Active Project
 
+```bash
+gcloud config set project <PROJECT_ID>
+```
+
+## Build Container
+
+```bash
+gcloud builds submit \
+  --tag gcr.io/<PROJECT_ID>/job-title-api
+```
+
+## Deploy Service
+
+```bash
 gcloud run deploy job-title-service \
+  --image gcr.io/<PROJECT_ID>/job-title-api \
+  --platform managed \
+  --region asia-southeast2 \
+  --allow-unauthenticated
+```
 
-    --image gcr.io/<PROJECT_ID_KAMU>/job-title-api \
+After deployment, Cloud Run will generate a public URL such as:
 
-    --platform managed \
+```text
+https://job-title-service-xxxxx.a.run.app
+```
 
-    --region asia-southeast2 \
+---
 
-    --allow-unauthenticated
+# 📊 Model Information
 
+| Item           | Value                      |
+| -------------- | -------------------------- |
+| Framework      | TensorFlow                 |
+| Architecture   | Deep Residual MLP          |
+| Classes        | 20 Job Titles              |
+| API Framework  | FastAPI                    |
+| Deployment     | Google Cloud Run           |
+| Container      | Docker                     |
+| Input Features | 104i                       |
+| Output         | Top-K Job Title Prediction |
+
+---
+
+## 👨‍💻 Author
+
+Developed as part of an AI Engineering project for Job Title Prediction and Career Recommendation Systems.
