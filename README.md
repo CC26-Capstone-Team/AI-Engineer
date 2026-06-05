@@ -4,6 +4,8 @@ Layanan AI berbasis Deep Learning untuk memprediksi Job Title kandidat berdasark
 
 Model dikembangkan menggunakan TensorFlow Functional API dan dideploy sebagai REST API menggunakan FastAPI pada Google Cloud Run.
 
+Model link : https://drive.google.com/file/d/1gZX0OZMT9TP-xP7zRtZyRLMEHyNydEUO/view?usp=sharing
+
 ## 🌐 Live Demo
 
 | Service | URL |
