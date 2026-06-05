@@ -78,14 +78,14 @@ class LabelSmoothingCategoricalCrossentropy(keras.losses.Loss):
 
 
 # ── 2. PATH ABSOLUT ARTEFAK DI DOCKER CONTAINER ──
-MODEL_PATH = "/app/mlp_job_title.keras"
-METADATA_PATH = "/app/model_metadata.json"
+MODEL_PATH = "/app/model/mlp_job_title.keras"
+METADATA_PATH = "/app/model/model_metadata.json"
 
 # Definisikan path untuk file pkl preprocessing Anda
-ENC_EDU_REQ_PATH = "/app/encoder_education_required.pkl"
-MLB_EDU_BG_PATH = "/app/mlb_edu_bg.pkl"
-MLB_SKILLS_PATH = "/app/mlb_skills.pkl"
-SCALER_GPA_PATH = "/app/scaler_gpa.pkl" 
+ENC_EDU_REQ_PATH = "/app/encoder/encoder_education_required.pkl"
+MLB_EDU_BG_PATH = "/app/encoder/mlb_edu_bg.pkl"
+MLB_SKILLS_PATH = "/app/encoder/mlb_skills.pkl"
+SCALER_GPA_PATH = "/app/encoder/scaler_gpa.pkl" 
 
 # Inisialisasi variabel global kosong
 MODEL = None

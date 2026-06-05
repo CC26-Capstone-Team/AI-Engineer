@@ -16,12 +16,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Salin seluruh kode aplikasi dan model
 COPY ./app /app/app
-COPY ./mlp_job_title.keras /app/mlp_job_title.keras
-COPY ./model_metadata.json /app/model_metadata.json
-COPY ./mlb_edu_bg.pkl /app/mlb_edu_bg.pkl
-COPY ./mlb_skills.pkl /app/mlb_skills.pkl
-COPY ./encoder_education_required.pkl /app/encoder_education_required.pkl
-COPY ./scaler_gpa.pkl /app/scaler_gpa.pkl
+COPY ./model /app/model
+COPY ./encoder /app/encoder
 
 EXPOSE 8080
 
