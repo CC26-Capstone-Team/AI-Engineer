@@ -8,10 +8,10 @@ Model dikembangkan menggunakan TensorFlow Functional API dan dideploy sebagai RE
 
 | Service | URL |
 |----------|-----|
-| API Base URL | https://your-service-name.a.run.app |
-| Swagger Docs | https://your-service-name.a.run.app/docs |
-| ReDoc | https://your-service-name.a.run.app/redoc |
-| Health Check | https://your-service-name.a.run.app/health |
+| API Base URL | https://job-title-api-842754562942.asia-southeast2.run.app |
+| Swagger Docs | https://job-title-api-842754562942.asia-southeast2.run.app/docs |
+| ReDoc | https://job-title-api-842754562942.asia-southeast2.run.app/redoc |
+| Health Check | https://job-title-api-842754562942.asia-southeast2.run.app/health |
 
 ---
 
@@ -274,4 +274,4 @@ https://job-title-service-xxxxx.a.run.app
 
 ## 👨‍💻 Author
 
-Developed as part of an AI Engineering project for Job Title Prediction and Career Recommendation Systems.
+Developed as part of an AI Engineering for CarPathMu Job Title Prediction and Career Recommendation Systems.
