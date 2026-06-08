@@ -114,7 +114,7 @@ Generated from a combination of:
 Replace the following URL with your Cloud Run endpoint after deployment.
 
 ```text
-https://<service-name>-<hash>.a.run.app
+https://job-title-api-842754562942.asia-southeast2.run.app/
 ```
 
 ### Available Endpoints
